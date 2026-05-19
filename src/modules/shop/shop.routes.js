@@ -10,7 +10,7 @@ import {
   editProduct,
   removeProduct,
 } from "./shop.controller.js";
-
+import checkoutRoutes from "./checkout/checkout.routes.js";
 const router = Router();
 
 const upload = multer({
@@ -41,6 +41,8 @@ router.post("/admin/products/:id/variants", adminAuth, addVariant);
 router.patch("/admin/products/:id", adminAuth, editProduct);
 router.delete("/admin/products/:id", adminAuth, removeProduct);
 
+// checkout routes
+router.use("/", checkoutRoutes);
 router.use((err, req, res, next) => {
   if (err instanceof multer.MulterError || err.message?.includes("Only JPEG")) {
     return res.status(400).json({ success: false, message: err.message });
