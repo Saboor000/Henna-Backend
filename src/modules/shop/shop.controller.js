@@ -65,30 +65,38 @@ export const addProduct = async (req, res, next) => {
 // POST /api/shop/admin/products/:id/images
 export const addProductImage = async (req, res, next) => {
   try {
-    if (!req.file) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Image file is required." });
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Image files are required.",
+      });
     }
+
     const isPrimary = req.body.is_primary === "true";
     const displayOrder = parseInt(req.body.display_order) || 0;
 
-    const image = await uploadProductImage(
-      req.params.id,
-      req.file,
-      isPrimary,
-      displayOrder,
-    );
+    const uploadedImages = [];
+
+    for (const file of req.files) {
+      const image = await uploadProductImage(
+        req.params.id,
+        file,
+        isPrimary,
+        displayOrder,
+      );
+
+      uploadedImages.push(image);
+    }
+
     return res.status(201).json({
       success: true,
-      message: "Image uploaded successfully.",
-      data: image,
+      message: "Images uploaded successfully.",
+      data: uploadedImages,
     });
   } catch (err) {
     next(err);
   }
 };
-
 // POST /api/shop/admin/products/:id/variants
 export const addVariant = async (req, res, next) => {
   try {

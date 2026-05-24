@@ -1,3 +1,4 @@
+// checkout.validation.js
 import Joi from "joi";
 
 export const checkoutSchema = Joi.object({
@@ -5,10 +6,10 @@ export const checkoutSchema = Joi.object({
   items: Joi.array()
     .items(
       Joi.object({
-        productId: Joi.number().integer().positive().required(),
-        variantId: Joi.number().integer().positive().optional(),
+        productId: Joi.string().uuid().required(),
+        variantId: Joi.string().uuid().optional(),
         quantity: Joi.number().integer().min(1).default(1),
-      }),
+      }).options({ stripUnknown: true }), // ✅ drops variants, any other extra fields
     )
     .min(1)
     .required(),

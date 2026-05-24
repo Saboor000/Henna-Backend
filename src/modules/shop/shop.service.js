@@ -67,8 +67,11 @@ export const getAllProducts = async (filters = {}) => {
 };
 
 export const getProductByIdentifier = async (identifier) => {
-  const isId = /^\d+$/.test(identifier);
-  const field = isId ? "id" : "slug";
+  const isUUID =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      identifier,
+    );
+  const field = isUUID ? "id" : "slug";
 
   const { data, error } = await supabase
     .from("products")

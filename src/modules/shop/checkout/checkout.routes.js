@@ -13,4 +13,18 @@ router.post(
 
 router.post("/checkout", checkout);
 
+router.get("/checkout/success", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Payment successful!",
+    sessionId: req.query.session_id,
+  });
+});
+
+router.get("/checkout/cancel", (req, res) => {
+  res.status(200).json({
+    success: false,
+    message: "Payment cancelled.",
+  });
+});
 export default router;

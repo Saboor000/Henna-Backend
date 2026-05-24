@@ -19,19 +19,22 @@ export const createCheckoutSession = async (items, customerEmail) => {
     if (!product) throw new Error(`Product ${item.productId} not found.`);
 
     let unitPrice = product.discount_price ?? product.price;
-
+    let variantLabel = "";
     if (item.variantId) {
       const variant = product.product_variants?.find(
         (v) => v.id === item.variantId,
       );
-      if (variant) unitPrice += variant.price_modifier ?? 0;
+      if (variant) {
+        unitPrice += Number(variant.price_modifier ?? 0);
+        variantLabel = ` — ${variant.value}`; // e.g. "Natural Henna Cones — 20 Grams"
+      }
     }
 
     return {
       price_data: {
         currency: "usd",
         product_data: {
-          name: product.name,
+          name: `${product.name}${variantLabel}`,
           metadata: {
             product_id: String(product.id),
             variant_id: item.variantId ? String(item.variantId) : "",

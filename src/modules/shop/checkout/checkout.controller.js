@@ -29,6 +29,7 @@ export const checkout = async (req, res, next) => {
 
 // POST /api/shop/webhook
 export const stripeWebhook = async (req, res, next) => {
+  console.log("Body is Buffer:", Buffer.isBuffer(req.body)); // must print true
   try {
     const signature = req.headers["stripe-signature"];
     const result = await handleStripeWebhook(req.body, signature);

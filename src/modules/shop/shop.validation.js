@@ -1,5 +1,7 @@
 import Joi from "joi";
 
+const ALLOWED_CATEGORIES = ["Cone", "Kit", "Accessory", "Other"];
+
 export const createProductSchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().required(),
@@ -7,7 +9,9 @@ export const createProductSchema = Joi.object({
   price: Joi.number().positive().required(),
   discount_price: Joi.number().positive().less(Joi.ref("price")).optional(), // 👈 must be less than price
   stock: Joi.number().integer().min(0).optional(),
-  category: Joi.string().required(),
+  category: Joi.string()
+    .valid(...ALLOWED_CATEGORIES)
+    .required(),
   is_featured: Joi.boolean().optional(),
   is_active: Joi.boolean().optional(),
 });
@@ -19,7 +23,9 @@ export const updateProductSchema = Joi.object({
   price: Joi.number().positive().optional(),
   discount_price: Joi.number().positive().less(Joi.ref("price")).optional(),
   stock: Joi.number().integer().min(0).optional(),
-  category: Joi.string().optional(),
+  category: Joi.string()
+    .valid(...ALLOWED_CATEGORIES)
+    .optional(),
   is_featured: Joi.boolean().optional(),
   is_active: Joi.boolean().optional(),
 });

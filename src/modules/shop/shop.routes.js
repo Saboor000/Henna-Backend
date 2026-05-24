@@ -34,7 +34,7 @@ router.post("/admin/products", adminAuth, addProduct);
 router.post(
   "/admin/products/:id/images",
   adminAuth,
-  upload.single("image"),
+  upload.array("image", 5),
   addProductImage,
 );
 router.post("/admin/products/:id/variants", adminAuth, addVariant);

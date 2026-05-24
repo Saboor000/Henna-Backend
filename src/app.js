@@ -14,8 +14,14 @@ const app = express();
 
 // parse JSON and urlencoded request bodies
 app.use(corsMiddleware); // ← use
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  if (req.originalUrl === "/api/shop/webhook") {
+    next(); // raw body handled by express.raw() in checkout.routes.js
+  } else {
+    express.json()(req, res, next); // all other routes parse JSON normally
+  }
+});
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/bookings", bridalRoutes);
